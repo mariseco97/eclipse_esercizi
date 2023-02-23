@@ -1,0 +1,61 @@
+package it.prova;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource; 
+
+
+public class EsempioDatabase {
+	private Connection con;
+	public static void main(String[] args) {
+		
+		EsempioDatabase d = new EsempioDatabase();
+		
+		try {
+			System.out.println(d.startConnection().isValid(100));
+			System.out.println(d.startConnection().isClosed());
+			d.esempioSelect();
+		}catch (SQLException e){
+			System.out.println("Siamo nel catch, c'è un errore di connessione");
+			e.printStackTrace();
+			
+		}
+		
+	}
+	
+	private Connection startConnection() throws SQLException {
+		if(con == null) {
+			MysqlDataSource dataSource = new MysqlDataSource();
+			dataSource.setServerName("127.0.0.1");
+			dataSource.setPortNumber(3306);
+			dataSource.setUser("root");
+			dataSource.setPassword("root");
+			dataSource.setDatabaseName("corso_java_prova");
+			con = dataSource.getConnection();
+			
+		}
+		return con;
+	}
+	
+	private void esempioSelect() throws SQLException {
+		/*Questa riga ci andrà a sostituire l'elenco dei clienti*/
+		String sql = "SELECT * FROM utenti";
+		// passiamo la query in ingresso
+		
+		PreparedStatement statement = startConnection().prepareStatement(sql);
+		statement.executeQuery();
+		
+		ResultSet rs = statement.executeQuery();
+		
+		while(rs.next()) {
+			System.out.println("id" + rs.getInt(1));
+			System.out.println("nome:" + rs.getString(2));
+			System.out.println("cognome:" + rs.getString(3));
+			System.out.println("--------------------------");
+		}
+	}
+
+}

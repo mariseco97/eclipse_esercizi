@@ -1,0 +1,43 @@
+package persona;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+public class Persona {
+
+	private Connection con;
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		//L'istanza della classe per accedere al DB
+		Persona person = new Persona();
+		try {
+			System.out.println(person.getConnection().isValid(50));
+			System.out.println(person.getConnection().isClosed());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	private Connection getConnection() throws SQLException {
+		
+		if(con == null) {
+			MysqlDataSource dataSource = new MysqlDataSource();
+			dataSource.setServerName("127.0.0.1");
+			dataSource.setPortNumber(3306);
+			dataSource.setUser("root");
+			dataSource.setPassword("root");
+			dataSource.setDatabaseName("prova_persona");
+			con = dataSource.getConnection();
+		}
+		return con;
+	}
+	
+
+}
